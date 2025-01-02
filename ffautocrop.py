@@ -99,7 +99,7 @@ def cropdetect_video(video_path: str | Path, num_cropdetect_chunks: int,
 
 def crop_video(video_path: str | Path, output_path: str | Path, num_cropdetect_chunks: int,
                cropdetect_chunk_duration: float, video_codec: str = 'libx265',
-               output_format: Optional[str] = None) -> bool:
+               output_format: Optional[str] = None, overwrite: Optional[bool] = None) -> bool:
     """
     Crop the video.
 
@@ -141,7 +141,7 @@ def crop_video(video_path: str | Path, output_path: str | Path, num_cropdetect_c
     output_format = [] if output_format is None else ["-f", output_format]
 
     # We'll copy-encode all streams, except for video
-    ff_args = ["-y", *utils.get_ffmpeg_common_options(),
+    ff_args = [*utils.get_ffmpeg_common_options(),
                "-i", str(video_path),
                "-map", "0",
                "-c:s", "copy",
@@ -151,6 +151,8 @@ def crop_video(video_path: str | Path, output_path: str | Path, num_cropdetect_c
                "-filter:v", f"crop={out_width}:{out_height}:{start_crop_x}:{start_crop_y}",
                *output_format,
                str(output_path)]
+    if overwrite is not None:
+        ff_args.insert(0, "-y" if overwrite else "-n")
     # logger().debug("starting ffmpeg with args %s", str(ff_args))
     ff = subprocess.Popen(["ffmpeg", *ff_args])
     utils.wait_all(ff)
@@ -161,6 +163,9 @@ def crop_video(video_path: str | Path, output_path: str | Path, num_cropdetect_c
 
 def make_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--overwrite", required=False, default=None, action=argparse.BooleanOptionalAction,
+                        dest="overwrite_output_file",
+                        help="Overwrite output files without asking (default: do not overwrite)")
     parser.add_argument("-o", "--output", required=True, help="Output file", metavar="FILE",
                         dest="output_file_path")
     parser.add_argument("-f", "--format", default=None, metavar="FORMAT", dest="output_video_format",

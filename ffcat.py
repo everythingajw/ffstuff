@@ -11,6 +11,9 @@ import utils
 
 def make_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--overwrite", required=False, default=None, action=argparse.BooleanOptionalAction,
+                        dest="overwrite_output_file",
+                        help="Overwrite output files without asking (default: do not overwrite)")
     parser.add_argument("-o", "--output", required=True, help="Output file", metavar="FILE",
                         dest="output_file_path")
     parser.add_argument("-f", "--format", default=None, metavar="FORMAT", dest="output_video_format",
@@ -42,6 +45,8 @@ def main() -> int:
             f.write(b"ffconcat version 1.0\n")
             f.write(lines.encode("utf-8"))
         ff_args = ["ffmpeg", "-safe", "0", "-f", "concat", "-i", list_file, "-c", "copy"]
+        if args.overwrite_output_file is not None:
+            ff_args.insert(1, "-y" if args.overwrite_output_file else "-n")
         if args.output_video_format is not None:
             ff_args.extend(["-f", args.output_video_format])
         ff_args.extend(["-o", args.output_file_path])
