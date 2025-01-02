@@ -9,3 +9,7 @@ You must have ffmpeg installed and available on your `$PATH` as `ffmpeg`.
 - ffcat: concatenate one or more video files together
 - ffautocrop: automatically crops off those black bars from videos
 
+## Installing
+
+I personally make symbolic links to each of the binaries in a particular directory. Up to you how you want to do it.
+
