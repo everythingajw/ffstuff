@@ -19,6 +19,13 @@ def make_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def escape_file_name(name: str) -> str:
+    # After much testing, I found that apostrophes get escaped with quote-backslash-quote-quote.
+    # Double quotes need not be escaped.
+    # This is certainly something!
+    return name.replace("'", "'\\''")
+
+
 def main() -> int:
     args = make_arg_parser().parse_args()
     if len(args.output_file_path) == 0:
@@ -30,9 +37,10 @@ def main() -> int:
     try:
         (fd, list_file) = tempfile.mkstemp(prefix="ffcat_list")
         os.close(fd)
-        lines = "\n".join(f"file '{in_file}'" for in_file in args.input_files)
-        with open(list_file, "w") as f:
-            f.write(lines)
+        lines = "\n".join(f"file '{escape_file_name(in_file)}'" for in_file in args.input_files)
+        with open(list_file, "wb") as f:
+            f.write(b"ffconcat version 1.0\n")
+            f.write(lines.encode("utf-8"))
         ff_args = ["ffmpeg", "-safe", "0", "-f", "concat", "-i", list_file, "-c", "copy"]
         if args.output_video_format is not None:
             ff_args.extend(["-f", args.output_video_format])
