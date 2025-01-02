@@ -154,7 +154,7 @@ def crop_video(video_path: str | Path, output_path: str | Path, num_cropdetect_c
     if overwrite is not None:
         ff_args.insert(0, "-y" if overwrite else "-n")
     # logger().debug("starting ffmpeg with args %s", str(ff_args))
-    ff = subprocess.Popen(["ffmpeg", *ff_args])
+    ff = subprocess.Popen([utils.get_ffmpeg_path(), *ff_args])
     utils.wait_all(ff)
     if ff.returncode != 0:
         raise ValueError("crop error")

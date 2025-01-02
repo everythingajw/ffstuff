@@ -44,7 +44,7 @@ def main() -> int:
         with open(list_file, "wb") as f:
             f.write(b"ffconcat version 1.0\n")
             f.write(lines.encode("utf-8"))
-        ff_args = ["ffmpeg", "-safe", "0", "-f", "concat", "-i", list_file, "-c", "copy"]
+        ff_args = [utils.get_ffmpeg_path(), "-safe", "0", "-f", "concat", "-i", list_file, "-c", "copy"]
         if args.overwrite_output_file is not None:
             ff_args.insert(1, "-y" if args.overwrite_output_file else "-n")
         if args.output_video_format is not None:

@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import re
 from typing import Tuple, Optional, List
+import os
 
 
 def flatten(xs) -> list:
@@ -89,3 +90,8 @@ def get_ffmpeg_common_options(stats_period: float = 0.25, log_level: str = None,
                              *stats, "-stats_period", f"{stats_period:.3f}",
                              "-err_detect", "explode",
                              *hwaccel_decode]]
+
+
+def get_ffmpeg_path() -> str:
+    p = os.environ["FFSTUFF_FFMPEG_PATH"]
+    return p if p is not None else p
