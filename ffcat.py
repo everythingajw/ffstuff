@@ -26,6 +26,9 @@ def escape_file_name(name: str) -> str:
     # After much testing, I found that apostrophes get escaped with quote-backslash-quote-quote.
     # Double quotes need not be escaped.
     # This is certainly something!
+    # The list file seems to resolve relative paths relative to the output directory. Great.
+    # We'll just resolve the entire path.
+    name = str(Path(name).resolve())
     return name.replace("'", "'\\''")
 
 
