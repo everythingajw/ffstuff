@@ -93,5 +93,5 @@ def get_ffmpeg_common_options(stats_period: float = 0.25, log_level: str = None,
 
 
 def get_ffmpeg_path() -> str:
-    p = os.environ["FFSTUFF_FFMPEG_PATH"]
-    return p if p is not None else p
+    key = "FFSTUFF_FFMPEG_PATH"
+    return os.environ[key] if key in os.environ else "ffmpeg"
