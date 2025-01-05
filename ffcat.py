@@ -49,7 +49,7 @@ def main() -> int:
             ff_args.insert(1, "-y" if args.overwrite_output_file else "-n")
         if args.output_video_format is not None:
             ff_args.extend(["-f", args.output_video_format])
-        ff_args.extend(["-o", args.output_file_path])
+        ff_args.append(args.output_file_path)
         ff = subprocess.Popen(ff_args)
         try:
             ff.wait()
