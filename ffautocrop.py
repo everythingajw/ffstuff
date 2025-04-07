@@ -176,8 +176,7 @@ def make_arg_parser() -> argparse.ArgumentParser:
                         required=False, type=float, help="Duration of each chunk for cropdetect")
     parser.add_argument("-c", "--video-codec", default=None, metavar="CODEC", dest="video_codec",
                         required=False, type=str, help="Video codec to use when cropping")
-    parser.add_argument("input_file", metavar="FILE", type=str, nargs='+', help="Input file",
-                        required=True, dest="input_file_path")
+    parser.add_argument("input_file_path", metavar="FILE", type=str, action="store", help="Input file")
     return parser
 
 
